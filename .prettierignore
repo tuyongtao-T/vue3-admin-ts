@@ -1,0 +1,19 @@
+/dist/*
+.local
+.output.js
+/node_modules/**
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+**/*.svg
+**/*.sh
+
+/public/*
+
+# auto generate file
+components.d.ts
+auto-imports.d.ts
