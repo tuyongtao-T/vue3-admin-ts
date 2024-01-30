@@ -1,11 +1,19 @@
+<!--
+ * @Author: tuyongtao1
+ * @Date: 2023-05-24 16:21:07
+ * @LastEditors: tuyongtao1
+ * @LastEditTime: 2024-01-30 20:37:56
+ * @Description: 
+-->
 <template>
   <div class="layout-container">
     <el-container class="main-container">
       <el-aside class="main-left" v-if="isDev">
-        <LayMenu />
+        <LayoutMenu />
       </el-aside>
       <el-main class="main-right">
-        <LayContent></LayContent>
+        <LayoutHeader />
+        <LayoutContent />
       </el-main>
     </el-container>
   </div>
@@ -13,13 +21,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import LayMenu from '@/components/layout/layMenu.vue'
-import LayContent from './layContent.vue'
+import LayoutMenu from './components/LayoutMenu.vue'
+import LayoutContent from './components/LayoutContent.vue'
+import LayoutHeader from './components/LayoutHeader.vue'
 
 export default defineComponent({
   components: {
-    LayMenu,
-    LayContent
+    LayoutMenu,
+    LayoutContent,
+    LayoutHeader
   },
   setup() {
     const DEV = ref(import.meta.env.DEV)
@@ -45,9 +55,8 @@ export default defineComponent({
     }
 
     .main-right {
-      height: 100%;
-      // Apphub 默认存在内边距20px
-      padding: 20px;
+      height: 100vh;
+      padding: 0;
       background-color: white;
     }
   }

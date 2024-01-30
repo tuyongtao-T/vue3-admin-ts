@@ -1,3 +1,10 @@
+<!--
+ * @Author: tuyongtao1
+ * @Date: 2023-05-24 16:21:07
+ * @LastEditors: tuyongtao1
+ * @LastEditTime: 2024-01-30 20:53:07
+ * @Description: 
+-->
 <template>
   <div class="header-box">
     <div class="header-left">
@@ -28,37 +35,36 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100%;
-  padding: 0 20px;
+  height: 50px;
   color: #fff;
-}
 
-.header-left {
-  display: flex;
-  align-items: center;
-
-  .logo {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-
-  .user-info {
+  .header-left {
     display: flex;
     align-items: center;
-    color: #fff;
 
-    .user-name {
-      padding-left: 10px;
+    .logo {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      color: #fff;
+
+      .user-name {
+        padding-left: 10px;
+      }
     }
   }
 }

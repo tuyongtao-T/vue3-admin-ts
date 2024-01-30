@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:backend": "vite --mode backend",
     "dev:pre": "vite --mode prepare",
     "dev:prod": "vite --mode production",
     "build:dev": "rimraf dist && vite build --mode development",

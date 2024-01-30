@@ -2,7 +2,7 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-26 10:26:41
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-01-30 19:34:43
+ * @LastEditTime: 2024-01-30 21:16:24
  * @Description:
  */
 import { loadEnv } from 'vite'
@@ -40,7 +40,11 @@ export const getPlugins = (command, mode) => {
     Components({
       include: [/\.tsx$/, /\.vue$/, /\.vue\?vue/],
       // 生产环境按需引入
-      resolvers: process.env.NODE_ENV === 'production' ? ElementPlusResolver() : undefined
+      resolvers: [
+        // Auto register Element Plus components
+        // 自动导入 Element Plus 组件
+        ElementPlusResolver()
+      ]
     }),
     // 开发环境完整引入element-plus
     {
@@ -88,7 +92,7 @@ export const getPlugins = (command, mode) => {
   if (isEnabledMock) {
     plugins.push(
       viteMockServe({
-        mockPath: '/src/mock',
+        mockPath: 'mock',
         localEnabled: isEnabledMock,
         prodEnabled: false,
         supportTs: true, // 打开后，可以读取 ts 文件模块。 请注意，打开后将无法监视.js 文件。

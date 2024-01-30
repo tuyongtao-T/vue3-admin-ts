@@ -19,6 +19,6 @@
       "@assets/*": ["src/assets/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.ts", "src/mock/**/*.ts", "components.d.ts", "auto-imports.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "types/**/*.ts", "mock/**/*.ts", "components.d.ts", "auto-imports.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -7,7 +7,7 @@
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { menuRoutes } from '@/router/menu'
-import Layout from '@/components/layout/index.vue'
+import Layout from '@/Layout/index.vue'
 
 const routes: any = [
   {

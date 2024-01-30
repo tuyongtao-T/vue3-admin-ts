@@ -2,13 +2,13 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-24 14:35:59
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2023-05-24 18:19:20
+ * @LastEditTime: 2024-01-30 20:04:00
  * @Description:
  */
 import { resolve } from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
-import { getPlugins } from './plugins'
+import { getPlugins } from './build/vite/plugins'
 
 const CWD = process.cwd()
 
