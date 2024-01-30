@@ -1,3 +1,10 @@
+/*
+ * @Author: tuyongtao1
+ * @Date: 2023-05-26 10:26:41
+ * @LastEditors: tuyongtao1
+ * @LastEditTime: 2024-01-30 19:34:43
+ * @Description:
+ */
 import { loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -10,7 +17,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { viteMockServe } from 'vite-plugin-mock'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import Unocss from 'unocss/vite'
-// import Unfonts from 'unplugin-fonts/vite'
+import Unfonts from 'unplugin-fonts/vite'
 
 const CWD = process.cwd()
 
@@ -62,20 +69,20 @@ export const getPlugins = (command, mode) => {
           title: VITE_APP_TITLE
         }
       }
-    })
+    }),
     // 字体优化
-    // Unfonts({
-    //   custom: {
-    //     display: 'swap',
-    //     families: {
-    //       myFont: {
-    //         local: 'myFont',
-    //         src: './src/assets/styles/fonts/myFont/myFont-SC*'
-    //       }
-    //     },
-    //     injectTo: 'head'
-    //   }
-    // })
+    Unfonts({
+      custom: {
+        display: 'swap',
+        families: {
+          myFont: {
+            local: 'myFont',
+            src: './src/assets/styles/fonts/myFont/myFont-SC*'
+          }
+        },
+        injectTo: 'head'
+      }
+    })
   ]
 
   if (isEnabledMock) {

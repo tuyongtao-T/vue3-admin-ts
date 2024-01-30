@@ -103,5 +103,8 @@
     "*.md": [
       "prettier --write"
     ]
+  },
+  "volta": {
+    "node": "16.18.1"
   }
 }
