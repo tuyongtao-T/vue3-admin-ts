@@ -2,15 +2,13 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-24 16:21:07
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-01-30 20:37:56
+ * @LastEditTime: 2024-02-02 10:40:22
  * @Description: 
 -->
 <template>
   <div class="layout-container">
     <el-container class="main-container">
-      <el-aside class="main-left" v-if="isDev">
-        <LayoutMenu />
-      </el-aside>
+      <LayoutMenu v-if="isDev" />
       <el-main class="main-right">
         <LayoutHeader />
         <LayoutContent />
@@ -48,11 +46,6 @@ export default defineComponent({
     position: relative;
     height: 100%;
     background: #f5f5f5;
-
-    .main-left {
-      width: 200px;
-      height: 100%;
-    }
 
     .main-right {
       height: 100vh;

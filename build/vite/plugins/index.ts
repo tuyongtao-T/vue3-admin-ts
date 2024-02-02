@@ -2,7 +2,7 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-26 10:26:41
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-01-30 21:16:24
+ * @LastEditTime: 2024-01-31 17:28:19
  * @Description:
  */
 import { loadEnv } from 'vite'
@@ -34,7 +34,7 @@ export const getPlugins = (command, mode) => {
     AutoImport({
       include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
       dts: true,
-      imports: ['vue', 'vue-router'],
+      imports: ['vue', 'vue-router', 'pinia'],
       resolvers: [ElementPlusResolver()]
     }),
     Components({

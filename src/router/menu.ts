@@ -1,3 +1,10 @@
+/*
+ * @Author: tuyongtao1
+ * @Date: 2024-01-30 21:13:27
+ * @LastEditors: tuyongtao1
+ * @LastEditTime: 2024-02-02 10:36:38
+ * @Description:
+ */
 import type { RouteRecordRaw } from 'vue-router'
 
 export const menuRoutes: RouteRecordRaw[] = [
@@ -15,7 +22,7 @@ export const menuRoutes: RouteRecordRaw[] = [
     name: 'menu1',
     component: () => import('@/views/menu1/index.vue'),
     meta: {
-      title: '一级菜单-2',
+      title: '一级菜单-',
       icon: 'Magnet'
     },
     children: [
@@ -26,7 +33,27 @@ export const menuRoutes: RouteRecordRaw[] = [
         meta: {
           title: '二级菜单-1',
           icon: 'Magnet'
-        }
+        },
+        children: [
+          {
+            path: '/menu1/menu212',
+            name: 'menu212',
+            component: () => import('@/views/menu1/menu21/index.vue'),
+            meta: {
+              title: '二级菜单-12',
+              icon: 'Magnet'
+            }
+          },
+          {
+            path: '/menu1/menu223',
+            name: 'menu223',
+            component: () => import('@/views/menu1/menu22/index.vue'),
+            meta: {
+              title: '二级菜单-23',
+              icon: 'Magnet'
+            }
+          }
+        ]
       },
       {
         path: '/menu1/menu22',

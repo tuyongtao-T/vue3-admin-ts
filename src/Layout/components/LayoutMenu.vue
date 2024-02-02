@@ -2,37 +2,12 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-24 16:21:07
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-01-30 21:14:56
+ * @LastEditTime: 2024-02-02 10:55:33
  * @Description: 
 -->
 <template>
-  <el-menu :default-active="route.path" :router="true" class="aside-menu">
-    <div v-for="(item, index) in menuList" :key="index">
-      <template v-if="item.children && item.children.length">
-        <el-sub-menu :index="item.path">
-          <template #title>
-            <el-icon>
-              <component :is="item.meta?.icon" />
-            </el-icon>
-            <span>{{ item.meta?.title }}</span>
-          </template>
-          <el-menu-item v-for="(subItem, idx) in item.children" :key="idx" :class="{ isActive: activeTab == subItem.path }" :index="subItem.path" :route="subItem.path">
-            <el-icon>
-              <component :is="item.meta?.icon" />
-            </el-icon>
-            <span>{{ subItem.meta?.title }}</span>
-          </el-menu-item>
-        </el-sub-menu>
-      </template>
-      <template v-else>
-        <el-menu-item :class="{ isActive: activeTab == item.path }" :index="item.path" :route="item.path">
-          <el-icon>
-            <component :is="item.meta?.icon" />
-          </el-icon>
-          <span>{{ item.meta?.title }}</span>
-        </el-menu-item>
-      </template>
-    </div>
+  <el-menu :default-active="route.path" :router="true" :collapse="isCollapse" class="aside-menu">
+    <aside-menu-item :menu-list="menuList"></aside-menu-item>
   </el-menu>
 </template>
 
@@ -40,11 +15,17 @@
 import { useRoute } from 'vue-router'
 import { useMenuStore } from '@/store/modules/menu'
 import { menuRoutes } from '@/router/menu'
+import { useConfigStore } from '@/store/modules/config'
+import AsideMenuItem from './AsideMenuItem.vue'
 
 const route = useRoute()
 const menuStore = useMenuStore()
-const activeTab = menuStore.activeTab
+const configStore = useConfigStore()
 const menuList = reactive(menuRoutes)
+
+const isCollapse = computed(() => {
+  return configStore.isCollapse
+})
 
 watch(
   () => route.path,
@@ -68,7 +49,9 @@ watch(
 
 <style lang="less" scoped>
 .aside-menu {
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  .isShow {
+    display: none;
+  }
 }
 </style>
