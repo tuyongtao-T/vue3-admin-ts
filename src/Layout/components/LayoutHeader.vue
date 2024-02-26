@@ -2,7 +2,7 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-24 16:21:07
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-02 09:49:01
+ * @LastEditTime: 2024-02-02 12:58:52
  * @Description: 
 -->
 <template>
@@ -11,10 +11,7 @@
       <Expand v-if="isCollapse" />
       <Fold v-else />
     </el-icon>
-    <div class="header-left">
-      <img src="@/assets/img/logo.png" class="logo" />
-      <h1>后台管理系统模板</h1>
-    </div>
+    <span>后台管理系统模板</span>
     <div class="header-right">
       <el-dropdown>
         <span class="user-info">
@@ -44,10 +41,9 @@ const { isCollapse } = storeToRefs(configStore)
 .header-box {
   display: flex;
   align-items: center;
-  height: 50px;
-  padding: 0 15px;
-  color: #fff;
-  border-bottom: 1px solid rgb(202 196 196);
+  justify-content: space-between;
+  height: 40px;
+  border-bottom: 1px solid #e3dcdc;
 
   .header-left {
     display: flex;
@@ -68,12 +64,10 @@ const { isCollapse } = storeToRefs(configStore)
   .header-right {
     display: flex;
     align-items: center;
-    width: 60px;
 
     .user-info {
       display: flex;
       align-items: center;
-      color: #fff;
 
       .user-name {
         padding-left: 10px;

@@ -2,7 +2,7 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-24 16:16:02
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2023-05-24 16:40:14
+ * @LastEditTime: 2024-02-26 17:42:13
  * @Description:
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
@@ -14,7 +14,7 @@ const routes: any = [
     path: '/',
     component: Layout,
     redirect: (_: any) => {
-      return { path: '/demo' }
+      return { path: '/dashboard' }
     },
     children: [...menuRoutes]
   },

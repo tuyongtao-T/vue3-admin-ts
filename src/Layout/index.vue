@@ -2,17 +2,19 @@
  * @Author: tuyongtao1
  * @Date: 2023-05-24 16:21:07
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-02 10:40:22
+ * @LastEditTime: 2024-02-02 13:52:42
  * @Description: 
 -->
 <template>
   <div class="layout-container">
-    <el-container class="main-container">
-      <LayoutMenu v-if="isDev" />
-      <el-main class="main-right">
+    <el-container class="h-100%">
+      <el-scrollbar :noresize="true">
+        <LayoutMenu v-if="isDev" />
+      </el-scrollbar>
+      <el-container class="main-container">
         <LayoutHeader />
         <LayoutContent />
-      </el-main>
+      </el-container>
     </el-container>
   </div>
 </template>
@@ -43,15 +45,8 @@ export default defineComponent({
   height: 100%;
 
   .main-container {
-    position: relative;
-    height: 100%;
-    background: #f5f5f5;
-
-    .main-right {
-      height: 100vh;
-      padding: 0;
-      background-color: white;
-    }
+    flex-direction: column;
+    margin: 0 10px;
   }
 }
 </style>

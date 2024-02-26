@@ -2,67 +2,68 @@
  * @Author: tuyongtao1
  * @Date: 2024-01-30 21:13:27
  * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-02 10:36:38
+ * @LastEditTime: 2024-02-26 17:41:44
  * @Description:
  */
 import type { RouteRecordRaw } from 'vue-router'
 
 export const menuRoutes: RouteRecordRaw[] = [
   {
-    path: '/demo',
-    name: 'demo',
-    component: () => import('@/views/demo/index.vue'),
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('@/views/dashboard/index.vue'),
     meta: {
-      title: 'Demo',
+      title: 'Dashboard',
       icon: 'Aim'
     }
   },
   {
-    path: '/menu1',
-    name: 'menu1',
-    component: () => import('@/views/menu1/index.vue'),
+    path: '/systemManage',
+    name: 'systemManage',
+    component: () => import('@/views/systemManage/index.vue'),
     meta: {
-      title: '一级菜单-',
+      title: '系统管理',
       icon: 'Magnet'
     },
     children: [
       {
-        path: '/menu1/menu21',
-        name: 'menu21',
-        component: () => import('@/views/menu1/menu21/index.vue'),
+        path: '/systemManage/userManage',
+        name: 'userManage',
+        component: () => import('@/views/systemManage/userManage/index.vue'),
         meta: {
-          title: '二级菜单-1',
+          title: '用户管理',
+          icon: 'Magnet'
+        },
+        children: []
+      },
+      {
+        path: '/systemManage/authManage',
+        name: 'authManage',
+        component: () => import('@/views/systemManage/authManage/index.vue'),
+        meta: {
+          title: '权限管理',
           icon: 'Magnet'
         },
         children: [
           {
-            path: '/menu1/menu212',
-            name: 'menu212',
-            component: () => import('@/views/menu1/menu21/index.vue'),
+            path: '/systemManage/authManage/menu',
+            name: 'menu',
+            component: () => import('@/views/systemManage/authManage/menuAuthManage/index.vue'),
             meta: {
-              title: '二级菜单-12',
+              title: '菜单权限',
               icon: 'Magnet'
             }
           },
           {
-            path: '/menu1/menu223',
-            name: 'menu223',
-            component: () => import('@/views/menu1/menu22/index.vue'),
+            path: '/systemManage/authManage/btn',
+            name: 'btn',
+            component: () => import('@/views/systemManage/authManage/btnAuthManage/index.vue'),
             meta: {
-              title: '二级菜单-23',
+              title: '按钮权限',
               icon: 'Magnet'
             }
           }
         ]
-      },
-      {
-        path: '/menu1/menu22',
-        name: 'menu22',
-        component: () => import('@/views/menu1/menu22/index.vue'),
-        meta: {
-          title: '二级菜单-2',
-          icon: 'Magnet'
-        }
       }
     ]
   }
