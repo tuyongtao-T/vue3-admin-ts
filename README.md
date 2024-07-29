@@ -12,7 +12,7 @@ vue-admin-ts 是一个后台前端解决方案，它基于 vue3 和 element-ui p
 
 ```
 node: 16.18.1
-pnpm: 7.32.0
+pnpm: 9.1.2
 ```
 
 ## 开发

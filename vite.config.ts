@@ -90,7 +90,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       extensions: ['.js', '.json', '.ts', '.tsx', '.vue', '.mjs']
     },
     server: {
-      host: 'vue.admin.com',
+      // host: 'vue.admin.com',
       port: 5173,
       open: true,
       cors: true, // 允许跨域

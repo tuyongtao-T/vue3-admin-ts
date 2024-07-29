@@ -1,7 +1,7 @@
 module.exports = {
   processors: [],
   plugins: ['stylelint-order'],
-  extends: ['stylelint-config-standard', 'stylelint-config-prettier', 'stylelint-config-recess-order', 'stylelint-config-html/vue'],
+  extends: ['stylelint-config-standard', 'stylelint-config-recess-order', 'stylelint-config-html/vue'],
   rules: {
     // 未知方法
     'function-no-unknown': [

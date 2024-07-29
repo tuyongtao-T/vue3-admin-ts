@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "author": {
+    "name": "tuyongtao",
+    "email": "731156510@qq.com",
+    "url": "http://tuyongtao.top/fettjob/"
+  },
   "scripts": {
     "dev": "vite",
     "dev:pre": "vite --mode prepare",
@@ -65,7 +70,6 @@
     "rollup-plugin-visualizer": "^5.9.0",
     "stylelint": "^15.3.0",
     "stylelint-config-html": "^1.1.0",
-    "stylelint-config-prettier": "^9.0.5",
     "stylelint-config-recess-order": "^4.0.0",
     "stylelint-config-standard": "^31.0.0",
     "stylelint-order": "^6.0.3",
@@ -82,6 +86,11 @@
     "vite-plugin-mock": "^2.9.6",
     "vue-tsc": "^1.2.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tuyongtao-T/vue3-admin-ts.git"
+  },
+  "license": "MIT",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
@@ -102,6 +111,9 @@
     "*.md": [
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": ">=16.18.6"
   },
   "volta": {
     "node": "16.18.1"
