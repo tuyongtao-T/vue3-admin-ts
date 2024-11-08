@@ -6,7 +6,12 @@
  * @Description: 
 -->
 <template>
-  <el-menu :default-active="route.path" :router="true" :collapse="isCollapse" class="aside-menu">
+  <el-menu
+    :default-active="route.path"
+    :router="true"
+    :collapse="isCollapse"
+    class="aside-menu"
+  >
     <aside-menu-item :menu-list="menuList"></aside-menu-item>
   </el-menu>
 </template>
@@ -47,7 +52,7 @@ watch(
 )
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .aside-menu {
   // width: 100%;
   .isShow {

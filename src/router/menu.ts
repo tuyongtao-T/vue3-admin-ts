@@ -21,6 +21,7 @@ export const menuRoutes: RouteRecordRaw[] = [
     path: '/systemManage',
     name: 'systemManage',
     component: () => import('@/views/systemManage/index.vue'),
+    redirect: { name: 'userManage' },
     meta: {
       title: '系统管理',
       icon: 'Magnet'
@@ -40,6 +41,7 @@ export const menuRoutes: RouteRecordRaw[] = [
         path: '/systemManage/authManage',
         name: 'authManage',
         component: () => import('@/views/systemManage/authManage/index.vue'),
+        redirect: { name: 'menu' },
         meta: {
           title: '权限管理',
           icon: 'Magnet'
@@ -48,7 +50,10 @@ export const menuRoutes: RouteRecordRaw[] = [
           {
             path: '/systemManage/authManage/menu',
             name: 'menu',
-            component: () => import('@/views/systemManage/authManage/menuAuthManage/index.vue'),
+            component: () =>
+              import(
+                '@/views/systemManage/authManage/menuAuthManage/index.vue'
+              ),
             meta: {
               title: '菜单权限',
               icon: 'Magnet'
@@ -57,7 +62,8 @@ export const menuRoutes: RouteRecordRaw[] = [
           {
             path: '/systemManage/authManage/btn',
             name: 'btn',
-            component: () => import('@/views/systemManage/authManage/btnAuthManage/index.vue'),
+            component: () =>
+              import('@/views/systemManage/authManage/btnAuthManage/index.vue'),
             meta: {
               title: '按钮权限',
               icon: 'Magnet'

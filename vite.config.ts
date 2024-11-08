@@ -1,22 +1,23 @@
-/*
- * @Author: tuyongtao1
- * @Date: 2023-05-24 14:35:59
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-01-30 20:04:00
- * @Description:
- */
 import { resolve } from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
-import { getPlugins } from './build/vite/plugins'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import viteCompression from 'vite-plugin-compression'
+import DefineOptions from 'unplugin-vue-define-options/dist/vite'
+import { visualizer } from 'rollup-plugin-visualizer'
+import { viteMockServe } from 'vite-plugin-mock'
+import { createHtmlPlugin } from 'vite-plugin-html'
+import Unocss from 'unocss/vite'
 
 const CWD = process.cwd()
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
-  const { VITE_BASE_URL, VITE_PROXY_URL } = loadEnv(mode, CWD)
-
-  const plugins = getPlugins(command, mode)
+  const { VITE_BASE_URL, VITE_PROXY_URL, VITE_APP_TITLE } = loadEnv(mode, CWD)
 
   return {
     base: VITE_BASE_URL, // 设置打包路径
@@ -53,7 +54,62 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         }
       }
     },
-    plugins,
+    plugins: [
+      vue(),
+      vueJsx(),
+      DefineOptions(),
+      AutoImport({
+        include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
+        dts: true,
+        imports: ['vue', 'vue-router', 'pinia'],
+        resolvers: [ElementPlusResolver()]
+      }),
+      Components({
+        include: [/\.tsx$/, /\.vue$/, /\.vue\?vue/],
+        // 生产环境按需引入
+        resolvers: [
+          // Auto register Element Plus components
+          // 自动导入 Element Plus 组件
+          ElementPlusResolver()
+        ]
+      }),
+      // 开发环境完整引入element-plus
+      {
+        name: 'dev-auto-import-element-plus',
+        transform(code, id) {
+          if (
+            process.env.NODE_ENV !== 'production' &&
+            /src\/main.ts$/.test(id)
+          ) {
+            return {
+              code: `${code};import ElementPlus from 'element-plus';import 'element-plus/dist/index.css';app.use(ElementPlus);`,
+              map: null
+            }
+          }
+        }
+      },
+      viteCompression({
+        verbose: true,
+        disable: false,
+        threshold: 10240,
+        algorithm: 'gzip',
+        ext: '.gz'
+      }),
+      Unocss(),
+      createHtmlPlugin({
+        minify: true,
+        inject: {
+          data: {
+            title: VITE_APP_TITLE
+          }
+        }
+      }),
+      viteMockServe({
+        mockPath: './mock',
+        enable: true
+      }),
+      visualizer()
+    ],
     css: {
       modules: {
         localsConvention: 'camelCase', // 默认只支持驼峰，修改为同时支持横线和驼峰
@@ -74,9 +130,8 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         ]
       },
       preprocessorOptions: {
-        less: {
+        scss: {
           charset: false,
-          additionalData: `@import "${resolve(__dirname, 'src/assets/styles/variables.less')}";`,
           javascriptEnabled: true
         }
       }
@@ -90,17 +145,17 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       extensions: ['.js', '.json', '.ts', '.tsx', '.vue', '.mjs']
     },
     server: {
-      // host: 'vue.admin.com',
+      host: 'yongtao-custom.com',
       port: 5173,
       open: true,
-      cors: true, // 允许跨域
-      proxy: {
-        '/api': {
-          target: VITE_PROXY_URL,
-          changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, '')
-        }
-      }
+      cors: true // 允许跨域
+      // proxy: {
+      //   '/api': {
+      //     target: VITE_PROXY_URL,
+      //     changeOrigin: true,
+      //     rewrite: path => path.replace(/^\/api/, '')
+      //   }
+      // }
     }
   }
 })

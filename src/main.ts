@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
-import './assets/styles/index.less'
-import 'unfonts.css'
+import './assets/styles/index.scss'
 import 'uno.css'
 import { setupStore } from '@/store'
 import router from '@/router'

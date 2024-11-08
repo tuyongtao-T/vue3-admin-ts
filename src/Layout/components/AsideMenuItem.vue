@@ -1,10 +1,3 @@
-<!--
- * @Author: tuyongtao1
- * @Date: 2024-01-31 17:08:33
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-02 10:52:47
- * @Description:  
--->
 <template>
   <template v-for="item in menuList" :key="item.name">
     <template v-if="item.children && item.children.length">

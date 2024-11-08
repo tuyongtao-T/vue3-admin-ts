@@ -1,10 +1,3 @@
-<!--
- * @Author: tuyongtao1
- * @Date: 2023-05-24 16:21:07
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-02 13:52:42
- * @Description: 
--->
 <template>
   <div class="layout-container">
     <el-container class="h-100%">
@@ -13,7 +6,7 @@
       </el-scrollbar>
       <el-container class="main-container">
         <LayoutHeader />
-        <LayoutContent />
+        <MainContent />
       </el-container>
     </el-container>
   </div>
@@ -22,13 +15,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import LayoutMenu from './components/LayoutMenu.vue'
-import LayoutContent from './components/LayoutContent.vue'
+import MainContent from './components/MainContent.vue'
 import LayoutHeader from './components/LayoutHeader.vue'
 
 export default defineComponent({
   components: {
     LayoutMenu,
-    LayoutContent,
+    MainContent,
     LayoutHeader
   },
   setup() {
@@ -40,13 +33,13 @@ export default defineComponent({
 })
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .layout-container {
   height: 100%;
 
   .main-container {
     flex-direction: column;
-    margin: 0 10px;
+    background-color: rgb(228 228 231 / 0.4);
   }
 }
 </style>
