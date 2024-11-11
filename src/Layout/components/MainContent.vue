@@ -15,5 +15,6 @@
 .route-out {
   height: calc(100% - 83px);
   padding: 16px;
+  overflow: auto;
 }
 </style>
