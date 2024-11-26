@@ -47,13 +47,13 @@ defineProps(['dashboardCardList', 'loading'])
 </script>
 
 <style scoped>
-::v-deep .el-card__header,
-::v-deep .el-card__body,
-::v-deep .el-card__footer {
+::v-deep(.el-card__header),
+::v-deep(.el-card__body),
+::v-deep(.el-card__footer) {
   padding: 8px;
 }
 
-::v-deep .el-card__header {
+::v-deep(.el-card__header) {
   border: none;
 }
 </style>

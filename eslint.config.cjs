@@ -8,7 +8,8 @@ module.exports = {
     "eslint:recommended",
     "plugin:vue/vue3-essential",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "plugin:import/recommended",
   ],
   "overrides": [
     {
@@ -69,7 +70,46 @@ module.exports = {
     "vue/require-default-prop": "off",
     "vue/require-explicit-emits": "off",
     "vue/multi-word-component-names": "off",
-    "vue/one-component-per-file": "off"
+    "vue/one-component-per-file": "off",
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal'],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+          {
+            pattern: 'react-dom',
+            group: 'external',
+            position: 'before',
+          },
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'before',
+          },
+          {
+            pattern: './**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '../**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react', 'react-dom'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
   },
   ignores: [
     'node_modules/**', // 忽略 node_modules 目录

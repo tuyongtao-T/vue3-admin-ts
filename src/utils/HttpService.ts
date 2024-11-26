@@ -2,7 +2,8 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
   AxiosInstance,
-  CancelTokenSource
+  CancelTokenSource,
+  InternalAxiosRequestConfig
 } from 'axios'
 
 // 自定义配置选项接口
@@ -78,8 +79,8 @@ class HttpService {
 
   setRequestInterceptor(
     onFulfilled: (
-      value: AxiosRequestConfig
-    ) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+      value: InternalAxiosRequestConfig
+    ) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>,
     onRejected: (error: any) => any
   ) {
     this.axiosInstance.interceptors.request.use(onFulfilled, onRejected)
@@ -94,10 +95,10 @@ class HttpService {
     this.axiosInstance.interceptors.response.use(onFulfilled, onRejected)
   }
 
-  async request(
+  async request<T>(
     config: AxiosRequestConfig,
     customOptions: CustomOptions = {}
-  ): Promise<AxiosResponse> {
+  ): Promise<AxiosResponse<Result<T>>> {
     const finalCustomOptions = { ...this.customOptions, ...customOptions }
     const {
       retry,
@@ -151,12 +152,12 @@ class HttpService {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
-  get(
+  get<T>(
     url: string,
     config: AxiosRequestConfig = {},
     customOptions: CustomOptions = {}
-  ): Promise<AxiosResponse> {
-    return this.request({ url, method: 'GET', ...config }, customOptions)
+  ): Promise<AxiosResponse<Result<T>>> {
+    return this.request<T>({ url, method: 'GET', ...config }, customOptions)
   }
 
   post(

@@ -1,6 +1,7 @@
 import http from '@/utils/primaryHttp'
 export const useDashboardApi = {
-  getDashboardCardList: () => http.get('/dashboardCardList')
+  getDashboardCardList: () =>
+    http.get<DashboardCardItem[]>('/dashboardCardList')
 }
 
 interface DashboardCardItem {
