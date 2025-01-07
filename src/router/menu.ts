@@ -1,10 +1,3 @@
-/*
- * @Author: tuyongtao1
- * @Date: 2024-01-30 21:13:27
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-26 17:41:44
- * @Description:
- */
 import type { RouteRecordRaw } from 'vue-router'
 
 export const menuRoutes: RouteRecordRaw[] = [
@@ -70,6 +63,28 @@ export const menuRoutes: RouteRecordRaw[] = [
             }
           }
         ]
+      }
+    ]
+  },
+  {
+    path: '/awesome',
+    name: 'awesome',
+    component: () => import('@/views/awesome/index.vue'),
+    redirect: { name: 'honeycomb' },
+    meta: {
+      title: '技能积累',
+      icon: 'Magnet'
+    },
+    children: [
+      {
+        path: '/awesome/honeycomb',
+        name: 'honeycomb',
+        component: () => import('@/views/awesome/honeycomb/index.vue'),
+        meta: {
+          title: '蜂巢网页',
+          icon: 'Magnet'
+        },
+        children: []
       }
     ]
   }

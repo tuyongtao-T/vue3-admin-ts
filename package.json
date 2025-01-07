@@ -72,6 +72,7 @@
     "rimraf": "^4.4.0",
     "rollup-plugin-visualizer": "^5.9.0",
     "sass-embedded": "^1.80.6",
+    "sass-embedded-darwin-x64": "^1.83.0",
     "stylelint": "^16.10.0",
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-recess-order": "^5.1.1",
