@@ -12,6 +12,8 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { viteMockServe } from 'vite-plugin-mock'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import Unocss from 'unocss/vite'
+import fs from 'fs'
+import path from 'path'
 
 const CWD = process.cwd()
 
@@ -146,6 +148,10 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
     },
     server: {
       host: 'yongtao-custom.com',
+      https: {
+        key: fs.readFileSync(path.resolve(__dirname, 'localhost+2-key.pem')),
+        cert: fs.readFileSync(path.resolve(__dirname, 'localhost+2.pem'))
+      },
       port: 5173,
       open: true,
       cors: true // 允许跨域

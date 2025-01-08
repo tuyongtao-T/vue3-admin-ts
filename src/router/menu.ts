@@ -85,6 +85,16 @@ export const menuRoutes: RouteRecordRaw[] = [
           icon: 'Magnet'
         },
         children: []
+      },
+      {
+        path: '/awesome/onLineFile',
+        name: 'onLineFile',
+        component: () => import('@/views/awesome/onLineFile/index.vue'),
+        meta: {
+          title: '在线文件',
+          icon: 'Magnet'
+        },
+        children: []
       }
     ]
   }
