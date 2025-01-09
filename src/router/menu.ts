@@ -87,9 +87,9 @@ export const menuRoutes: RouteRecordRaw[] = [
         children: []
       },
       {
-        path: '/awesome/onLineFile',
-        name: 'onLineFile',
-        component: () => import('@/views/awesome/onLineFile/index.vue'),
+        path: '/awesome/onlineVscode',
+        name: 'onlineVscode',
+        component: () => import('@/views/awesome/onlineVscode/index.vue'),
         meta: {
           title: '在线vscode',
           icon: 'Magnet'

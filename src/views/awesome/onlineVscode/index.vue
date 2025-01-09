@@ -31,7 +31,7 @@
           id="editableContent"
           class="codeContainer"
           @keydown="handleKeydown"
-          :contenteditable="isFile"
+          :contenteditable="isEditable"
         ><code v-html="fileText"></code></pre>
       </div>
     </div>
@@ -47,30 +47,27 @@ const vscodeRef = ref(null)
 
 const { toggle } = useFullscreen(vscodeRef)
 
+const defaultProps = reactive({
+  children: 'children',
+  label: 'name'
+})
 const data = ref([])
-const fileText = ref('')
-const currentHandle = ref({})
-const vscodeNode = ref(null)
-const isFile = computed(() => {
-  const res = currentHandle.value instanceof FileSystemFileHandle
-  return res
-})
 
-onMounted(() => {
-  docHandle()
-  vscodeNode.value = document.getElementById('vscode')
-})
-onBeforeUnmount(() => {
-  removeDocHandle()
-  vscodeNode.value = null
-})
+const currentHandle = ref({})
+const fileText = ref('')
+
+const isEditable = ref(false)
 
 const handleNodeClick = async data => {
   try {
     if (data.kind === 'directory') {
       return
     }
+    if (data.kind === 'file') {
+      isEditable.value = true
+    }
     currentHandle.value = data
+
     const file = await data.getFile()
     const reader = new FileReader()
     reader.onload = e => {
@@ -81,11 +78,12 @@ const handleNodeClick = async data => {
     console.log(error)
   }
 }
-const defaultProps = reactive({
-  children: 'children',
-  label: 'name'
-})
+
+/**
+ * @description 打开文件夹
+ */
 const openFolder = async () => {
+  console.log('openFolder')
   try {
     // 句柄
     const handle = await showDirectoryPicker()
@@ -99,6 +97,9 @@ async function processHandle(handle) {
   if (handle.kind === 'file') {
     return
   }
+  if (handle.name === 'node_modules') {
+    return
+  }
   // entires 异步迭代器
   const entries = await handle.entries()
   handle.children = []
@@ -108,24 +109,9 @@ async function processHandle(handle) {
   }
 }
 
-async function writeFile(fileHandle, content) {
-  try {
-    // 请求写权限
-    const writable = await fileHandle.createWritable()
-    // 写入数据
-    await writable.write(content)
-    // 关闭流以保存更改
-    await writable.close()
-    ElMessage({
-      message: '保存成功',
-      type: 'success',
-      plain: true
-    })
-  } catch (error) {
-    console.error('写入文件时发生错误:', error)
-  }
-}
-
+/**
+ * @description 监听保存事件
+ */
 function handleKeydown(e) {
   if (event.key === 'Tab') {
     event.preventDefault() // 阻止默认的 Tab 行为
@@ -146,8 +132,30 @@ function handleKeydown(e) {
     }
   }
 }
+/**
+ * @description 写入文件
+ * @param fileHandle 文件句柄
+ * @param content 需要写入的内容
+ */
+async function writeFile(fileHandle, content) {
+  try {
+    // 请求写权限
+    const writable = await fileHandle.createWritable()
+    // 写入数据
+    await writable.write(content)
+    // 关闭流以保存更改
+    await writable.close()
+    ElMessage({
+      message: '保存成功',
+      type: 'success',
+      plain: true
+    })
+  } catch (error) {
+    console.error('写入文件时发生错误:', error)
+  }
+}
 
-function handleCtrl() {
+function handleCtrl(event) {
   if (
     (event.ctrlKey || event.metaKey) &&
     (event.key === 's' || event.key === 'S')
@@ -162,12 +170,23 @@ function handleCtrl() {
     writeFile(currentHandle.value, originalContent)
   }
 }
+
 function docHandle() {
   document.addEventListener('keydown', handleCtrl)
 }
 function removeDocHandle() {
   document.removeEventListener('keydown', handleCtrl)
 }
+
+const vscodeNode = ref(null)
+onMounted(() => {
+  docHandle()
+  vscodeNode.value = document.getElementById('vscode')
+})
+onBeforeUnmount(() => {
+  removeDocHandle()
+  vscodeNode.value = null
+})
 </script>
 
 <style lang="scss" scoped>
@@ -238,8 +257,8 @@ function removeDocHandle() {
     } */
 
       :deep(.el-tree-node__content) {
-        height: 40px;
-        font-size: 20px;
+        height: 32px;
+        font-size: 16px;
         color: rgb(235 228 228);
         background-color: $leftBgColor;
       }

@@ -72,11 +72,11 @@ const handleMouseOver = e => {
     display: flex;
 
     &:nth-child(even) {
-      transform: translateX(-$size / 2);
+      transform: translateX(-($size / 2));
     }
 
     &:nth-child(n + 2) {
-      margin-top: -$size / 6;
+      margin-top: -($size / 6);
     }
 
     .item {

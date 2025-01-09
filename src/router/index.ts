@@ -1,10 +1,3 @@
-/*
- * @Author: tuyongtao1
- * @Date: 2023-05-24 16:16:02
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-26 17:42:13
- * @Description:
- */
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { menuRoutes } from '@/router/menu'
 import Layout from '@/Layout/index.vue'
