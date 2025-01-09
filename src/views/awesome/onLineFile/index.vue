@@ -1,37 +1,39 @@
 <template>
-  <div class="onLineFile" id="vscode" ref="vscodeRef">
-    <div class="left">
-      <div class="resize-slide"></div>
-      <div class="resize-line"></div>
-      <div class="real-box">
-        <el-button class="operate-btn" type="primary" @click="openFolder"
-          >打开文件夹</el-button
-        >
-        <div class="file-list">
-          <el-tree
-            :data="data"
-            :highlight-current="true"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
+  <div class="onLineFile">
+    <div class="full-container" id="vscode" ref="vscodeRef">
+      <div class="left">
+        <div class="resize-slide"></div>
+        <div class="resize-line"></div>
+        <div class="real-box">
+          <el-button class="operate-btn" type="primary" @click="openFolder"
+            >打开文件夹</el-button
           >
-          </el-tree>
+          <div class="file-list">
+            <el-tree
+              :data="data"
+              :highlight-current="true"
+              :props="defaultProps"
+              @node-click="handleNodeClick"
+            >
+            </el-tree>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="right">
-      <el-button
-        class="fullScreen-btn"
-        @click="toggle"
-        type="primary"
-        size="small"
-        icon="FullScreen"
-      ></el-button>
-      <pre
-        id="editableContent"
-        class="codeContainer"
-        @keydown="handleKeydown"
-        :contenteditable="isFile"
-      ><code v-html="fileText"></code></pre>
+      <div class="right">
+        <el-button
+          class="fullScreen-btn"
+          @click="toggle"
+          type="primary"
+          size="small"
+          icon="FullScreen"
+        ></el-button>
+        <pre
+          id="editableContent"
+          class="codeContainer"
+          @keydown="handleKeydown"
+          :contenteditable="isFile"
+        ><code v-html="fileText"></code></pre>
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +50,6 @@ const { toggle } = useFullscreen(vscodeRef)
 const data = ref([])
 const fileText = ref('')
 const currentHandle = ref({})
-const isSaving = ref(false)
 const vscodeNode = ref(null)
 const isFile = computed(() => {
   const res = currentHandle.value instanceof FileSystemFileHandle
@@ -171,121 +172,123 @@ function removeDocHandle() {
 
 <style lang="scss" scoped>
 .onLineFile {
-  display: flex;
-  justify-content: flex-start;
-  $resize: 5px;
-  $leftBgColor: #181818;
+  .full-container {
+    display: flex;
+    justify-content: flex-start;
+    $resize: 5px;
+    $leftBgColor: #181818;
 
-  .left {
-    position: relative;
-    background-color: $leftBgColor;
+    .left {
+      position: relative;
+      background-color: $leftBgColor;
 
-    .resize-slide {
-      width: 200px;
-      height: calc(100vh - 115px);
-      overflow: scroll;
-      cursor: ew-resize;
-      cursor: col-resize;
-      resize: horizontal;
-      opacity: 0;
-    }
-
-    .resize-line {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      pointer-events: none;
-      border-right: $resize solid $leftBgColor;
-    }
-
-    .resize-slide:hover ~ .resize-line,
-    .resize-slide:active ~ .resize-line {
-      border-left-color: rgb(64 158 255);
-    }
-
-    .real-box {
-      position: absolute;
-      inset: 0;
-      right: $resize;
-      transition-duration: 0.3s;
-      transition-property: width;
-
-      .operate-btn {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        left: 20px;
+      .resize-slide {
+        width: 200px;
+        height: calc(100vh - 115px);
+        overflow: scroll;
+        cursor: ew-resize;
+        cursor: col-resize;
+        resize: horizontal;
+        opacity: 0;
       }
 
-      .file-list {
+      .resize-line {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        border-right: $resize solid $leftBgColor;
+      }
+
+      .resize-slide:hover ~ .resize-line,
+      .resize-slide:active ~ .resize-line {
+        border-left-color: rgb(64 158 255);
+      }
+
+      .real-box {
         position: absolute;
         inset: 0;
-        top: 44px;
-        overflow: auto;
+        right: $resize;
+        transition-duration: 0.3s;
+        transition-property: width;
+
+        .operate-btn {
+          position: absolute;
+          top: 10px;
+          right: 20px;
+          left: 20px;
+        }
+
+        .file-list {
+          position: absolute;
+          inset: 0;
+          top: 44px;
+          overflow: auto;
+        }
       }
-    }
 
-    .resize-slide::-webkit-scrollbar {
-      width: 200px;
-      height: inherit;
-    }
+      .resize-slide::-webkit-scrollbar {
+        width: 200px;
+        height: inherit;
+      }
 
-    /* :deep(.el-tree-node__expand-icon) {
+      /* :deep(.el-tree-node__expand-icon) {
       font-size: 18px;
     } */
 
-    :deep(.el-tree-node__content) {
-      height: 40px;
-      font-size: 20px;
-      color: rgb(235 228 228);
-      background-color: $leftBgColor;
+      :deep(.el-tree-node__content) {
+        height: 40px;
+        font-size: 20px;
+        color: rgb(235 228 228);
+        background-color: $leftBgColor;
+      }
+
+      :deep(.el-tree-node__content:hover) {
+        background-color: #37373e;
+      }
+
+      :deep(.el-tree-node:focus > .el-tree-node__content) {
+        background-color: rgb(0 95 204 / 0.5);
+        outline: rgb(0 95 204);
+      }
+
+      :deep(.el-tree) {
+        --el-tree-node-content-height: 40px !important;
+        --el-tree-node-hover-bg-color: var(--el-fill-color-light);
+        --el-tree-text-color: var(--el-text-color-regular);
+        --el-tree-expand-icon-color: var(--el-text-color-placeholder);
+
+        position: relative;
+        font-size: 16px;
+        color: #ccc;
+        cursor: default;
+        background: $leftBgColor;
+      }
     }
 
-    :deep(.el-tree-node__content:hover) {
-      background-color: #37373e;
-    }
-
-    :deep(.el-tree-node:focus > .el-tree-node__content) {
-      background-color: rgb(0 95 204 / 0.5);
-      outline: rgb(0 95 204);
-    }
-
-    :deep(.el-tree) {
-      --el-tree-node-content-height: 40px !important;
-      --el-tree-node-hover-bg-color: var(--el-fill-color-light);
-      --el-tree-text-color: var(--el-text-color-regular);
-      --el-tree-expand-icon-color: var(--el-text-color-placeholder);
-
+    .right {
       position: relative;
-      font-size: 16px;
-      color: #ccc;
-      cursor: default;
-      background: $leftBgColor;
-    }
-  }
+      flex: 1;
+      padding: 20px;
+      color: #abb2bf;
+      background-color: #1f1f1f;
 
-  .right {
-    position: relative;
-    flex: 1;
-    padding: 20px;
-    color: #abb2bf;
-    background-color: #1f1f1f;
+      .codeContainer {
+        height: calc(100vh - 156px);
+        overflow: auto;
+        outline: none;
+      }
 
-    .codeContainer {
-      height: calc(100vh - 156px);
-      overflow: auto;
-      outline: none;
-    }
+      .codeContainer::-webkit-scrollbar {
+        width: 2px;
+      }
 
-    .codeContainer::-webkit-scrollbar {
-      width: 2px;
-    }
-
-    .fullScreen-btn {
-      position: absolute;
-      top: 0;
-      right: 0;
+      .fullScreen-btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
   }
 }
