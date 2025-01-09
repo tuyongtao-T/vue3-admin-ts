@@ -29,7 +29,8 @@
     "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged",
     "prepare": "husky install",
-    "commit": "commit"
+    "commit": "commit",
+    "deploy": "deploy branch=master url=http://60.204.159.43/uploadDistZip appName=admin nginxPath=C:/phpstudy_pro/WWW"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -59,6 +60,7 @@
     "@vitejs/plugin-vue": "^4.1.0",
     "@vitejs/plugin-vue-jsx": "^3.0.1",
     "@vue/tsconfig": "^0.5.1",
+    "apps-deploy": "^1.0.2",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",

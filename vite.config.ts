@@ -50,7 +50,6 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
             elementplus: ['element-plus'],
             elementicon: ['@element-plus/icons-vue'],
             echarts: ['echarts'],
-            xlsx: ['xlsx'],
             utils: ['axios', 'lodash-es']
           }
         }
