@@ -2,7 +2,7 @@
   <div class="layout-container">
     <el-container class="h-100%">
       <el-scrollbar :noresize="true">
-        <LayoutMenu v-if="isDev" />
+        <LayoutMenu />
       </el-scrollbar>
       <el-container class="main-container">
         <LayoutHeader />
@@ -27,6 +27,7 @@ export default defineComponent({
   setup() {
     const DEV = ref(import.meta.env.DEV)
     return {
+      // 控制是否展示菜单，开发环境为true，生产环境为false
       isDev: DEV
     }
   }
