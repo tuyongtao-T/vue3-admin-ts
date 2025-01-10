@@ -27,12 +27,26 @@
           size="small"
           icon="FullScreen"
         ></el-button>
+        <!-- 代码文件 -->
         <pre
+          v-if="currentContainerType === 0"
           id="editableContent"
           class="codeContainer"
           @keydown="handleKeydown"
-          :contenteditable="isEditable"
+          contenteditable="true"
         ><code v-html="fileText"></code></pre>
+        <!-- 图片 -->
+        <div class="imgContainer" v-if="currentContainerType === 1">
+          <img :src="imgSrc" />
+        </div>
+        <!-- pdf、视频、音频 -->
+        <iframe
+          v-if="currentContainerType === 2"
+          :src="iframeSrc"
+          class="iframeContainer"
+          frameborder="0"
+        ></iframe>
+        <div v-if="currentContainerType === 3" class="mask"></div>
       </div>
     </div>
   </div>
@@ -44,7 +58,6 @@ import 'highlight.js/styles/atom-one-dark-reasonable.min.css'
 import { useFullscreen } from '@vueuse/core'
 
 const vscodeRef = ref(null)
-
 const { toggle } = useFullscreen(vscodeRef)
 
 const defaultProps = reactive({
@@ -53,29 +66,74 @@ const defaultProps = reactive({
 })
 const data = ref([])
 
-const currentHandle = ref({})
+const currentWriteHandle = ref({})
 const fileText = ref('')
 
-const isEditable = ref(false)
+/**
+ * @description 容器类型
+ * 0：可编辑的text
+ * 1: 图片
+ * 2: 视频、音频、PDF
+ * 3: 其他
+ */
+const currentContainerType = ref(3)
+const imgSrc = ref('')
+const iframeSrc = ref('')
 
+const isFile = ref(false)
 const handleNodeClick = async data => {
   try {
     if (data.kind === 'directory') {
+      currentContainerType.value = 3
+      isFile.value = false
       return
     }
-    if (data.kind === 'file') {
-      isEditable.value = true
-    }
-    currentHandle.value = data
-
+    isFile.value = true
     const file = await data.getFile()
-    const reader = new FileReader()
-    reader.onload = e => {
-      fileText.value = hljs.highlight('javascript', e.target.result).value
+    let fileType = file.type
+    if (fileType.includes('image')) {
+      currentContainerType.value = 1
+      imgSrc.value = URL.createObjectURL(file)
+      return
+    } else if (
+      fileType.includes('pdf') ||
+      fileType.includes('audio') ||
+      fileType.includes('video')
+    ) {
+      currentContainerType.value = 2
+      iframeSrc.value = URL.createObjectURL(file)
+      return
+    } else {
+      currentContainerType.value = 0
+      currentWriteHandle.value = data
+      const filename = file.name
+      const reader = new FileReader()
+      reader.onload = e => {
+        fileText.value = hljs.highlight(
+          getLanguageByExtension(filename),
+          e.target.result
+        ).value
+      }
+      reader.readAsText(file)
     }
-    reader.readAsText(file)
   } catch (error) {
     console.log(error)
+  }
+}
+
+function getLanguageByExtension(filename) {
+  const extension = filename.split('.').pop()
+  switch (extension) {
+    case 'jsx':
+      return 'javascript' // Highlight.js 处理 JSX 通常使用 JavaScript
+    case 'js':
+      return 'javascript'
+    case 'json':
+      return 'json'
+    case 'vue':
+      return 'javascript'
+    default:
+      return 'javascript' // 让 Highlight.js 自动检测
   }
 }
 
@@ -88,10 +146,34 @@ const openFolder = async () => {
     // 句柄
     const handle = await showDirectoryPicker()
     await processHandle(handle)
+    sortFileFolder(handle)
     data.value.push(handle)
   } catch (err) {
     console.log(err)
   }
+}
+
+function sortFileFolder(fileHandle) {
+  fileHandle.children.sort((a, b) => {
+    // 先按类型排序，目录在前
+    if (a.kind === 'directory' && b.kind !== 'directory') {
+      return -1
+    }
+    if (a.kind !== 'directory' && b.kind === 'directory') {
+      return 1
+    }
+
+    // 如果类型相同，再按名称排序，以 . 开头的在前
+    if (a.name.startsWith('.') && !b.name.startsWith('.')) {
+      return -1
+    }
+    if (!a.name.startsWith('.') && b.name.startsWith('.')) {
+      return 1
+    }
+
+    // 最后按名称的字母顺序排序
+    return a.name.localeCompare(b.name)
+  })
 }
 async function processHandle(handle) {
   if (handle.kind === 'file') {
@@ -115,10 +197,8 @@ async function processHandle(handle) {
 function handleKeydown(e) {
   if (event.key === 'Tab') {
     event.preventDefault() // 阻止默认的 Tab 行为
-
     // 创建一个制表符
     const tabNode = document.createTextNode('\u00A0\u00A0\u00A0\u00A0') // 4 个空格
-
     // 获取当前的选区
     const selection = window.getSelection()
     if (selection.rangeCount > 0) {
@@ -167,7 +247,7 @@ function handleCtrl(event) {
     const editNode = document.getElementById('editableContent')
     const originalContentHtml = editNode.innerHTML
     const originalContent = originalContentHtml.replace(/<\/?[^>]+(>|$)/g, '')
-    writeFile(currentHandle.value, originalContent)
+    writeFile(currentWriteHandle.value, originalContent)
   }
 }
 
@@ -294,8 +374,10 @@ onBeforeUnmount(() => {
       background-color: #1f1f1f;
 
       .codeContainer {
+        width: 100%;
         height: calc(100vh - 156px);
         overflow: auto;
+        overflow-x: scroll;
         outline: none;
       }
 
@@ -307,6 +389,38 @@ onBeforeUnmount(() => {
         position: absolute;
         top: 0;
         right: 0;
+        z-index: 99999;
+      }
+
+      .imgContainer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: #1f1f1f;
+      }
+
+      .iframeContainer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: #1f1f1f;
+      }
+
+      .mask {
+        position: absolute;
+        inset: 0;
       }
     }
   }

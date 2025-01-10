@@ -72,7 +72,7 @@ export const menuRoutes: RouteRecordRaw[] = [
     component: () => import('@/views/awesome/index.vue'),
     redirect: { name: 'honeycomb' },
     meta: {
-      title: '技能积累',
+      title: '奇淫巧计',
       icon: 'Magnet'
     },
     children: [
