@@ -1,4 +1,3 @@
-import { resolve } from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import type { UserConfig, ConfigEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -62,8 +61,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       AutoImport({
         include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
         dts: true,
-        imports: ['vue', 'vue-router', 'pinia'],
-        resolvers: [ElementPlusResolver()]
+        imports: ['vue', 'vue-router', 'pinia']
       }),
       Components({
         include: [/\.tsx$/, /\.vue$/, /\.vue\?vue/],
@@ -71,24 +69,11 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         resolvers: [
           // Auto register Element Plus components
           // 自动导入 Element Plus 组件
-          ElementPlusResolver()
+          ElementPlusResolver({
+            importStyle: 'sass'
+          })
         ]
       }),
-      // 开发环境完整引入element-plus
-      {
-        name: 'dev-auto-import-element-plus',
-        transform(code, id) {
-          if (
-            process.env.NODE_ENV !== 'production' &&
-            /src\/main.ts$/.test(id)
-          ) {
-            return {
-              code: `${code};import ElementPlus from 'element-plus';import 'element-plus/dist/index.css';app.use(ElementPlus);`,
-              map: null
-            }
-          }
-        }
-      },
       viteCompression({
         verbose: true,
         disable: false,
@@ -132,16 +117,16 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       },
       preprocessorOptions: {
         scss: {
-          charset: false,
-          javascriptEnabled: true
+          additionalData: `@use "@/assets/styles/element/index.scss" as *;`,
+          api: 'modern-compiler'
         }
       }
     },
     resolve: {
       //设置别名
       alias: {
-        '@': resolve(__dirname, './src'),
-        '@assets': resolve(__dirname, './src/assets')
+        '@': path.resolve(__dirname, 'src'),
+        '@assets': path.resolve(__dirname, 'src/assets')
       },
       extensions: ['.js', '.json', '.ts', '.tsx', '.vue', '.mjs']
     },

@@ -4,7 +4,8 @@ module.exports = {
   "extends": [
     "stylelint-config-standard",
     "stylelint-config-recess-order",
-    "stylelint-config-html/vue"
+    "stylelint-config-html/vue",
+     "stylelint-scss"
   ],
   "rules": {
     "function-no-unknown": [
@@ -39,7 +40,10 @@ module.exports = {
           "if",
           "each",
           "include",
-          "mixin"
+          "mixin",
+          "use",
+          "forward",
+          "import"
         ]
       }
     ],
