@@ -27,3 +27,8 @@
 <script lang="ts" setup>
 defineProps(['menuList'])
 </script>
+<style lang="scss" scoped>
+:deep(.el-menu-item, .el-sub-menu) {
+  min-width: 200px !important;
+}
+</style>

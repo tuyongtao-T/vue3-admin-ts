@@ -10,9 +10,12 @@
       </el-space>
 
       <div class="header-right">
+        <el-button text bg @click="toggleDark()" circle>
+          <el-icon v-if="!isDark"><Moon /></el-icon>
+          <el-icon v-else><Sunny /></el-icon>
+        </el-button>
         <el-dropdown>
           <span class="user-info">
-            <el-button @click="toggleDark()" circle> </el-button>
             <el-avatar
               :size="30"
               src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
@@ -31,27 +34,29 @@
       </div>
     </div>
     <template v-if="menuStore.showTab">
-      <el-tabs
-        v-model="menuStore.activeTab"
-        type="card"
-        :closable="menuStore.menuItems.length > 1"
-        class="bg-white"
-        @tab-click="handleTabsClick"
-        @tab-remove="handleTabRemove"
-      >
-        <el-tab-pane
-          v-for="item in menuStore.menuItems"
-          :key="item.path"
-          :label="item.title"
-          :name="item.path"
+      <div class="route-tab">
+        <el-tabs
+          v-model="menuStore.activeTab"
+          type="card"
+          :closable="menuStore.menuItems.length > 1"
+          class="bg-white"
+          @tab-click="handleTabsClick"
+          @tab-remove="handleTabRemove"
         >
-        </el-tab-pane>
-      </el-tabs>
+          <el-tab-pane
+            v-for="item in menuStore.menuItems"
+            :key="item.path"
+            :label="item.title"
+            :name="item.path"
+          >
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </template>
   </div>
 </template>
 <script lang="ts" setup>
-import { toggleDark } from '@/composables'
+import { toggleDark, isDark } from '@/composables'
 import { useMenuStore } from '@/store/modules/menu'
 import type { TabPaneName, TabsPaneContext } from 'element-plus'
 import Breadcrumb from './Breadcrumb.vue'
@@ -93,31 +98,40 @@ const handleTabRemove = (tabName: TabPaneName) => {
 </script>
 
 <style lang="scss" scoped>
-.header-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 40px;
-  padding: 0 12px;
-  background: white;
-  border: 1px solid #e3e3e3;
-
-  .header-right {
+.layout-header {
+  .header-box {
+    box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    height: $app-header-height;
+    padding: 0 12px;
+    background: $primary-bg-color;
 
-    .user-info {
+    .header-right {
       display: flex;
       align-items: center;
 
-      .user-name {
-        padding-left: 10px;
+      .user-info {
+        display: flex;
+        align-items: center;
+
+        .user-name {
+          padding-left: 10px;
+        }
       }
+    }
+
+    svg {
+      cursor: pointer;
     }
   }
 
-  svg {
-    cursor: pointer;
+  .route-tab {
+    box-sizing: border-box;
+    height: $app-route-tab-height;
+    border-top: 1px solid var(--el-border-color);
+    border-bottom: 1px solid var(--el-border-color);
   }
 }
 

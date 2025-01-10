@@ -57,12 +57,13 @@ const resizeChart = () => {
 const debounceResizeChart = debounce(resizeChart, 200)
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* 添加一些样式 */
 .chart-container {
   height: 360px;
-  padding: 16px;
-  background: white;
-  border-radius: 12px;
+  padding: $primary-padding;
+  background: $primary-bg-color;
+  border-radius: 20px;
+  border-radius: var(--el-border-radius-round);
 }
 </style>

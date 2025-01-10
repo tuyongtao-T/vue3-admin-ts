@@ -1,16 +1,9 @@
-<!--
- * @Author: tuyongtao1
- * @Date: 2023-05-24 16:21:07
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-02 10:55:33
- * @Description: 
--->
 <template>
   <el-menu
     :default-active="route.path"
     :router="true"
     :collapse="isCollapse"
-    class="aside-menu"
+    class="el-menu-vertical-custom"
   >
     <aside-menu-item :menu-list="menuList"></aside-menu-item>
   </el-menu>
@@ -53,10 +46,7 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.aside-menu {
-  // width: 100%;
-  .isShow {
-    display: none;
-  }
+.el-menu-vertical-custom:not(.el-menu--collapse) {
+  width: $app-aside-width;
 }
 </style>

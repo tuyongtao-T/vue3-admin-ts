@@ -33,3 +33,10 @@ $--button-padding-vertical: (
 
 // custom dark variables
 @use './dark.scss';
+
+// custom app variables
+$app-header-height: 40px;
+$app-route-tab-height: 42px;
+$app-aside-width: 200px;
+$primary-bg-color: white;
+$primary-padding: 16px;

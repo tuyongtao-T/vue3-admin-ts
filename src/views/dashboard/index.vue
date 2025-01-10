@@ -244,14 +244,14 @@ const chartOptions4 = ref({
   background: transparent;
 
   .chart {
-    margin: 16px 0;
+    margin: $primary-padding 0;
   }
 
   .bottom-charts {
     display: grid;
     grid-template-rows: 1;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: $primary-padding;
     height: 400px;
   }
 }
