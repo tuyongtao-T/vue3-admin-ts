@@ -66,6 +66,7 @@ import 'highlight.js/styles/atom-one-dark-reasonable.min.css'
 import { useFullscreen } from '@vueuse/core'
 import * as XLSX from 'xlsx'
 import mammoth from 'mammoth'
+import { ElMessage } from 'element-plus'
 
 const vscodeRef = ref(null)
 const { toggle: toggleFullscreen } = useFullscreen(vscodeRef)
@@ -292,9 +293,23 @@ const handleCtrlSave = event => {
     if (!isFileSelected.value) return
     const editNode = document.getElementById('editableContent')
     const originalContentHtml = editNode.innerHTML
-    const originalContent = originalContentHtml.replace(/<\/?[^>]+(>|$)/g, '')
-    writeFile(currentFileHandle.value, originalContent)
+    const originalContent = originalContentHtml.replace(
+      /<(?!\/?(pre|code)\b)[^>]+>/g,
+      ''
+    )
+    writeFile(currentFileHandle.value, cleanAndDecodeHtml(originalContent))
   }
+}
+function cleanAndDecodeHtml(encodedString) {
+  // 去除外层的 <code> 标签
+  const withoutCodeTags = encodedString.replace(/<\/?code[^>]*>/g, '')
+
+  // 替换 HTML 实体
+  const decodedHtml = withoutCodeTags
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+
+  return decodedHtml
 }
 
 const addKeyboardEventListener = () => {
@@ -389,6 +404,11 @@ onBeforeUnmount(() => {
       }
 
       :deep(.el-tree-node:focus > .el-tree-node__content) {
+        background-color: rgb(0 95 204 / 0.5);
+        outline: rgb(0 95 204);
+      }
+
+      :deep(.el-tree-node .is-current > .el-tree-node__content) {
         background-color: rgb(0 95 204 / 0.5);
         outline: rgb(0 95 204);
       }
