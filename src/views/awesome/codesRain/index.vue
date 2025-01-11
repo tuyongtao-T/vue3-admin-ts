@@ -1,10 +1,21 @@
 <template>
   <div class="codes-rain">
-    <canvas id="codeRain" class="rain-container"></canvas>
+    <el-button
+      class="fullScreen-btn"
+      @click="toggleFullscreen"
+      type="primary"
+      size="small"
+      icon="FullScreen"
+    ></el-button>
+    <canvas ref="codeRainRef" id="codeRain" class="rain-container"></canvas>
   </div>
 </template>
 
 <script setup>
+import { useFullscreen } from '@vueuse/core'
+
+const codeRainRef = ref(null)
+const { toggle: toggleFullscreen } = useFullscreen(codeRainRef)
 const FONT_SIZE = 16
 
 let animationFrameId
@@ -92,6 +103,13 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .codes-rain {
   position: relative;
+
+  .fullScreen-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 99999;
+  }
 
   .rain-container {
     position: absolute;

@@ -4,7 +4,7 @@ import Mock, { Random } from 'mockjs'
 export default [
   {
     url: '/api/dashboard/dashboardCardList',
-    method: 'get',
+    method: 'post',
     response: () => {
       // const { list: data2 } = Mock.mock({
       //   'list|4': [
