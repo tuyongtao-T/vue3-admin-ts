@@ -3,7 +3,7 @@ import Mock, { Random } from 'mockjs'
 
 export default [
   {
-    url: '/api/dashboardCardList',
+    url: '/api/dashboard/dashboardCardList',
     method: 'get',
     response: () => {
       // const { list: data2 } = Mock.mock({

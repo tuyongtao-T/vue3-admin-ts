@@ -18,7 +18,8 @@ const CWD = process.cwd()
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
-  const { VITE_BASE_URL, VITE_PROXY_URL, VITE_APP_TITLE } = loadEnv(mode, CWD)
+  const { VITE_BASE_URL, VITE_PROXY_URL, VITE_USE_MOCK, VITE_APP_TITLE } =
+    loadEnv(mode, CWD)
 
   return {
     base: VITE_BASE_URL, // 设置打包路径
@@ -92,7 +93,7 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       }),
       viteMockServe({
         mockPath: './mock',
-        enable: true
+        enable: VITE_USE_MOCK === '1' ? true : false
       }),
       visualizer()
     ],
@@ -138,14 +139,15 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       },
       port: 5173,
       open: true,
-      cors: true // 允许跨域
-      // proxy: {
-      //   '/api': {
-      //     target: VITE_PROXY_URL,
-      //     changeOrigin: true,
-      //     rewrite: path => path.replace(/^\/api/, '')
-      //   }
-      // }
+      cors: true, // 允许跨域
+      proxy: {
+        '/api': {
+          target: VITE_PROXY_URL,
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/api/, ''),
+          secure: false // 忽略证书验证
+        }
+      }
     }
   }
 })
