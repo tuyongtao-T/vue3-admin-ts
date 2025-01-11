@@ -95,6 +95,16 @@ export const menuRoutes: RouteRecordRaw[] = [
           icon: 'Magnet'
         },
         children: []
+      },
+      {
+        path: '/awesome/codesRain',
+        name: 'codesRain',
+        component: () => import('@/views/awesome/codesRain/index.vue'),
+        meta: {
+          title: '代码雨',
+          icon: 'Magnet'
+        },
+        children: []
       }
     ]
   }

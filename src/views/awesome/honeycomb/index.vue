@@ -118,7 +118,7 @@ const handleMouseOver = e => {
 
     &::before {
       position: absolute;
-      left: math.div(-$size, 2);
+      left: math.div(-$size, 2) - math.div($size, 6);
       z-index: 2;
       width: math.div($size, 1);
       height: 100%;
@@ -129,7 +129,7 @@ const handleMouseOver = e => {
     &::after {
       position: absolute;
       top: 0;
-      right: math.div(-$size, 1);
+      right: math.div(-$size, 1) + math.div(-$size, 6);
       z-index: 2;
       width: math.div($size, 1);
       height: 100%;
