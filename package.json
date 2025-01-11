@@ -40,9 +40,11 @@
     "element-plus": "^2.9.0",
     "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
+    "mammoth": "^1.8.0",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",

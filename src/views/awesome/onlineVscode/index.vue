@@ -10,43 +10,51 @@
           >
           <div class="file-list">
             <el-tree
-              :data="data"
+              :data="fileTreeData"
               :highlight-current="true"
-              :props="defaultProps"
+              :props="treeProps"
               @node-click="handleNodeClick"
-            >
-            </el-tree>
+            ></el-tree>
           </div>
         </div>
       </div>
       <div class="right">
         <el-button
           class="fullScreen-btn"
-          @click="toggle"
+          @click="toggleFullscreen"
           type="primary"
           size="small"
           icon="FullScreen"
         ></el-button>
-        <!-- 代码文件 -->
         <pre
           v-if="currentContainerType === 0"
           id="editableContent"
           class="codeContainer"
           @keydown="handleKeydown"
           contenteditable="true"
-        ><code v-html="fileText"></code></pre>
-        <!-- 图片 -->
+        >
+          <code v-html="fileContent"></code>
+        </pre>
         <div class="imgContainer" v-if="currentContainerType === 1">
-          <img :src="imgSrc" />
+          <img :src="imageSource" />
         </div>
-        <!-- pdf、视频、音频 -->
         <iframe
           v-if="currentContainerType === 2"
-          :src="iframeSrc"
+          :src="iframeSource"
           class="iframeContainer"
           frameborder="0"
         ></iframe>
         <div v-if="currentContainerType === 3" class="mask"></div>
+        <div
+          v-if="currentContainerType === 4"
+          class="excelContainer"
+          v-html="excelContent"
+        ></div>
+        <div
+          v-if="currentContainerType === 5"
+          class="wordContainer"
+          v-html="wordContent"
+        ></div>
       </div>
     </div>
   </div>
@@ -56,174 +64,214 @@
 import hljs from 'highlight.js'
 import 'highlight.js/styles/atom-one-dark-reasonable.min.css'
 import { useFullscreen } from '@vueuse/core'
+import * as XLSX from 'xlsx'
+import mammoth from 'mammoth'
 
 const vscodeRef = ref(null)
-const { toggle } = useFullscreen(vscodeRef)
+const { toggle: toggleFullscreen } = useFullscreen(vscodeRef)
 
-const defaultProps = reactive({
+const treeProps = reactive({
   children: 'children',
   label: 'name'
 })
-const data = ref([])
+const fileTreeData = ref([])
 
-const currentWriteHandle = ref({})
-const fileText = ref('')
+const currentFileHandle = ref({})
+const fileContent = ref('')
 
-/**
- * @description 容器类型
- * 0：可编辑的text
- * 1: 图片
- * 2: 视频、音频、PDF
- * 3: 其他
- */
 const currentContainerType = ref(3)
-const imgSrc = ref('')
-const iframeSrc = ref('')
+const imageSource = ref('')
+const iframeSource = ref('')
+const excelContent = ref('')
+const wordContent = ref('')
 
-const isFile = ref(false)
-const handleNodeClick = async data => {
+const isFileSelected = ref(false)
+
+const handleNodeClick = async nodeData => {
   try {
-    if (data.kind === 'directory') {
-      currentContainerType.value = 3
-      isFile.value = false
+    if (nodeData.kind === 'directory') {
+      resetContainerType()
       return
     }
-    isFile.value = true
-    const file = await data.getFile()
-    let fileType = file.type
-    if (fileType.includes('image')) {
-      currentContainerType.value = 1
-      imgSrc.value = URL.createObjectURL(file)
-      return
-    } else if (
-      fileType.includes('pdf') ||
-      fileType.includes('audio') ||
-      fileType.includes('video')
-    ) {
-      currentContainerType.value = 2
-      iframeSrc.value = URL.createObjectURL(file)
-      return
-    } else {
-      currentContainerType.value = 0
-      currentWriteHandle.value = data
-      const filename = file.name
-      const reader = new FileReader()
-      reader.onload = e => {
-        fileText.value = hljs.highlight(
-          getLanguageByExtension(filename),
-          e.target.result
-        ).value
-      }
-      reader.readAsText(file)
-    }
+    isFileSelected.value = true
+    const file = await nodeData.getFile()
+    displayFileContent(file, nodeData)
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
-function getLanguageByExtension(filename) {
-  const extension = filename.split('.').pop()
-  switch (extension) {
-    case 'jsx':
-      return 'javascript' // Highlight.js 处理 JSX 通常使用 JavaScript
-    case 'js':
-      return 'javascript'
-    case 'json':
-      return 'json'
-    case 'vue':
-      return 'javascript'
-    default:
-      return 'javascript' // 让 Highlight.js 自动检测
+const resetContainerType = () => {
+  currentContainerType.value = 3
+  isFileSelected.value = false
+}
+
+const displayFileContent = (file, nodeData) => {
+  const fileType = file.type
+  if (fileType.includes('image')) {
+    currentContainerType.value = 1
+    imageSource.value = URL.createObjectURL(file)
+  } else if (
+    fileType.includes('pdf') ||
+    fileType.includes('audio') ||
+    fileType.includes('video')
+  ) {
+    currentContainerType.value = 2
+    iframeSource.value = URL.createObjectURL(file)
+  } else if (
+    fileType.includes('excel') ||
+    file.name.endsWith('.xlsx') ||
+    file.name.endsWith('.xls')
+  ) {
+    currentContainerType.value = 4
+    readExcelFile(file)
+  } else if (
+    fileType.includes('word') ||
+    file.name.endsWith('.docx') ||
+    file.name.endsWith('.doc')
+  ) {
+    currentContainerType.value = 5
+    readWordFile(file)
+  } else {
+    currentContainerType.value = 0
+    currentFileHandle.value = nodeData
+    readFileContent(file)
   }
 }
 
-/**
- * @description 打开文件夹
- */
+const readFileContent = file => {
+  const reader = new FileReader()
+  reader.onload = e => {
+    fileContent.value = hljs.highlightAuto(e.target.result).value
+  }
+  reader.readAsText(file)
+}
+
+const readExcelFile = file => {
+  const reader = new FileReader()
+  reader.onload = e => {
+    const data = new Uint8Array(e.target.result)
+    const workbook = XLSX.read(data, { type: 'array' })
+    const firstSheetName = workbook.SheetNames[0]
+    const worksheet = workbook.Sheets[firstSheetName]
+    const htmlContent = XLSX.utils.sheet_to_html(worksheet)
+
+    // 添加默认样式
+    const styledHtmlContent = `
+      <style>
+        .excel-table-container {
+          overflow-x: auto;
+          background-color: black; /* 容器背景色为黑色 */
+          padding: 10px; /* 添加内边距以避免表格紧贴容器边缘 */
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          color: white; /* 表格文字颜色为白色 */
+        }
+        th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          height: 40px; /* 设置行高 */
+          color: black; /* 单元格文字颜色为黑色 */
+          background-color: white; /* 单元格背景颜色为白色 */
+          white-space: nowrap; /* 禁止单元格内容换行 */
+        }
+        th {
+          background-color: #4CAF50; /* 表头背景颜色 */
+          color: white; /* 表头文字颜色 */
+        }
+        tr:nth-child(even) {
+          background-color: #f2f2f2; /* 偶数行背景颜色 */
+        }
+        tr:hover {
+          background-color: #ddd; /* 鼠标悬停行背景颜色 */
+        }
+        /* 添加鼠标悬停时整行的颜色效果 */
+        tr:hover th, tr:hover td {
+          background-color: #b0c4de; /* 悬停时整行背景颜色 */
+        }
+      </style>
+      <div class="excel-table-container">
+        ${htmlContent}
+      </div>
+    `
+
+    excelContent.value = styledHtmlContent
+  }
+  reader.readAsArrayBuffer(file)
+}
+
+const readWordFile = file => {
+  const reader = new FileReader()
+  reader.onload = event => {
+    mammoth
+      .convertToHtml({ arrayBuffer: event.target.result })
+      .then(result => {
+        wordContent.value = result.value // 设置解析后的 HTML 内容
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+  reader.readAsArrayBuffer(file) // 读取文件为 ArrayBuffer
+}
+
 const openFolder = async () => {
-  console.log('openFolder')
   try {
-    // 句柄
     const handle = await showDirectoryPicker()
-    await processHandle(handle)
-    sortFileFolder(handle)
-    data.value.push(handle)
+    await processDirectoryHandle(handle)
+    sortFileTree(handle)
+    fileTreeData.value.push(handle)
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 }
 
-function sortFileFolder(fileHandle) {
+const sortFileTree = fileHandle => {
   fileHandle.children.sort((a, b) => {
-    // 先按类型排序，目录在前
-    if (a.kind === 'directory' && b.kind !== 'directory') {
-      return -1
-    }
-    if (a.kind !== 'directory' && b.kind === 'directory') {
-      return 1
-    }
-
-    // 如果类型相同，再按名称排序，以 . 开头的在前
-    if (a.name.startsWith('.') && !b.name.startsWith('.')) {
-      return -1
-    }
-    if (!a.name.startsWith('.') && b.name.startsWith('.')) {
-      return 1
-    }
-
-    // 最后按名称的字母顺序排序
+    if (a.kind === 'directory' && b.kind !== 'directory') return -1
+    if (a.kind !== 'directory' && b.kind === 'directory') return 1
+    if (a.name.startsWith('.') && !b.name.startsWith('.')) return -1
+    if (!a.name.startsWith('.') && b.name.startsWith('.')) return 1
     return a.name.localeCompare(b.name)
   })
 }
-async function processHandle(handle) {
-  if (handle.kind === 'file') {
-    return
-  }
-  if (handle.name === 'node_modules') {
-    return
-  }
-  // entires 异步迭代器
+
+const processDirectoryHandle = async handle => {
+  if (handle.kind === 'file' || handle.name === 'node_modules') return
   const entries = await handle.entries()
   handle.children = []
   for await (const [key, subHandle] of entries) {
     handle.children.push(subHandle)
-    await processHandle(subHandle)
+    await processDirectoryHandle(subHandle)
   }
 }
 
-/**
- * @description 监听保存事件
- */
-function handleKeydown(e) {
-  if (event.key === 'Tab') {
-    event.preventDefault() // 阻止默认的 Tab 行为
-    // 创建一个制表符
-    const tabNode = document.createTextNode('\u00A0\u00A0\u00A0\u00A0') // 4 个空格
-    // 获取当前的选区
-    const selection = window.getSelection()
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0)
-      range.insertNode(tabNode)
-      // 移动光标到制表符之后
-      range.setStartAfter(tabNode)
-      range.setEndAfter(tabNode)
-      selection.removeAllRanges()
-      selection.addRange(range)
-    }
+const handleKeydown = e => {
+  if (e.key === 'Tab') {
+    e.preventDefault()
+    insertTabCharacter()
   }
 }
-/**
- * @description 写入文件
- * @param fileHandle 文件句柄
- * @param content 需要写入的内容
- */
-async function writeFile(fileHandle, content) {
+
+const insertTabCharacter = () => {
+  const tabNode = document.createTextNode('\u00A0\u00A0\u00A0\u00A0')
+  const selection = window.getSelection()
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+    range.insertNode(tabNode)
+    range.setStartAfter(tabNode)
+    range.setEndAfter(tabNode)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+}
+
+const writeFile = async (fileHandle, content) => {
   try {
-    // 请求写权限
     const writable = await fileHandle.createWritable()
-    // 写入数据
     await writable.write(content)
-    // 关闭流以保存更改
     await writable.close()
     ElMessage({
       message: '保存成功',
@@ -235,37 +283,34 @@ async function writeFile(fileHandle, content) {
   }
 }
 
-function handleCtrl(event) {
+const handleCtrlSave = event => {
   if (
     (event.ctrlKey || event.metaKey) &&
     (event.key === 's' || event.key === 'S')
   ) {
     event.preventDefault()
-    if (!isFile.value) {
-      return
-    }
+    if (!isFileSelected.value) return
     const editNode = document.getElementById('editableContent')
     const originalContentHtml = editNode.innerHTML
     const originalContent = originalContentHtml.replace(/<\/?[^>]+(>|$)/g, '')
-    writeFile(currentWriteHandle.value, originalContent)
+    writeFile(currentFileHandle.value, originalContent)
   }
 }
 
-function docHandle() {
-  document.addEventListener('keydown', handleCtrl)
-}
-function removeDocHandle() {
-  document.removeEventListener('keydown', handleCtrl)
+const addKeyboardEventListener = () => {
+  document.addEventListener('keydown', handleCtrlSave)
 }
 
-const vscodeNode = ref(null)
+const removeKeyboardEventListener = () => {
+  document.removeEventListener('keydown', handleCtrlSave)
+}
+
 onMounted(() => {
-  docHandle()
-  vscodeNode.value = document.getElementById('vscode')
+  addKeyboardEventListener()
 })
+
 onBeforeUnmount(() => {
-  removeDocHandle()
-  vscodeNode.value = null
+  removeKeyboardEventListener()
 })
 </script>
 
@@ -331,10 +376,6 @@ onBeforeUnmount(() => {
         width: 200px;
         height: inherit;
       }
-
-      /* :deep(.el-tree-node__expand-icon) {
-      font-size: 18px;
-    } */
 
       :deep(.el-tree-node__content) {
         height: 32px;
@@ -421,6 +462,16 @@ onBeforeUnmount(() => {
       .mask {
         position: absolute;
         inset: 0;
+      }
+
+      .wordContainer,
+      .excelContainer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        overflow: scroll;
       }
     }
   }
