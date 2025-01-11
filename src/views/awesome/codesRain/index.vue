@@ -5,20 +5,64 @@
 </template>
 
 <script setup>
-const canvasCtx = ref()
-const nextChars = new Array(40).fill(0)
+const FONT_SIZE = 16
 
-function draw() {
-  const fontSize = 20
-  for (let i = 0; i < 40; i++) {
-    const char = getRandomChar()
-    canvasCtx.value.fillStyle = getRandomColor()
-    canvasCtx.value.font = `${fontSize}px "Roboto Mono"`
-    const x = 20 * i
-    const nextIndex = nextChars[i]
-    const y = (nextIndex + 1) * 20
-    canvasCtx.value.fillText(char, x, y)
+let animationFrameId
+
+function draw(ctx, columns, fontSize, drops) {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+
+  ctx.font = `${fontSize}px monospace`
+
+  for (let i = 0; i < columns; i++) {
+    const text = getRandomChar()
+    const x = i * fontSize
+    const y = drops[i] * fontSize
+
+    ctx.fillStyle = getRandomColor()
+    ctx.fillText(text, x, y)
+
+    if (y > ctx.canvas.height && Math.random() > 0.975) {
+      drops[i] = 0
+    }
+
+    drops[i]++
   }
+}
+
+function init() {
+  const fontSize = FONT_SIZE
+  const canvasEl = document.getElementById('codeRain')
+  const canvasStyle = getComputedStyle(canvasEl)
+  const canvasWidth = parseInt(canvasStyle.width)
+  const canvasHeight = parseInt(canvasStyle.height)
+
+  const dpr = window.devicePixelRatio || 1
+  canvasEl.width = canvasWidth * dpr
+  canvasEl.height = canvasHeight * dpr
+
+  const ctx = canvasEl.getContext('2d')
+  ctx.scale(dpr, dpr)
+
+  const columns = Math.floor(canvasWidth / fontSize)
+  const drops = new Array(columns).fill(0)
+
+  function animate() {
+    draw(ctx, columns, fontSize, drops)
+    animationFrameId = requestAnimationFrame(animate)
+  }
+
+  // 添加鼠标事件监听器
+  canvasEl.addEventListener('mouseenter', () => {
+    cancelAnimationFrame(animationFrameId)
+  })
+
+  canvasEl.addEventListener('mouseleave', () => {
+    animate()
+  })
+
+  animate()
 }
 
 function getRandomColor() {
@@ -29,25 +73,19 @@ function getRandomColor() {
   }
   return color
 }
-function getRandomChar(length = 1) {
-  let str = ''
-  let characters =
+
+function getRandomChar() {
+  const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (let i = 0; i < length; i++) {
-    str += characters.charAt(Math.floor(Math.random() * characters.length))
-  }
-  return str
+  return characters.charAt(Math.floor(Math.random() * characters.length))
 }
 
 onMounted(() => {
-  const fontSize = 20
-  const columnWidth = fontSize
-  const canvasEl = document.getElementById('codeRain')
-  const canvasWidth = parseInt(getComputedStyle(canvasEl).width)
-  const columnNum = Math.floor(canvasWidth / columnWidth)
-  console.log(columnNum)
-  canvasCtx.value = canvasEl.getContext('2d')
-  draw()
+  init()
+})
+
+onUnmounted(() => {
+  cancelAnimationFrame(animationFrameId)
 })
 </script>
 
@@ -60,6 +98,7 @@ onMounted(() => {
     inset: 0;
     width: 100%;
     height: 100%;
+    background: black;
   }
 }
 </style>
