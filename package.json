@@ -30,7 +30,7 @@
     "lint:lint-staged": "lint-staged",
     "prepare": "husky install",
     "commit": "commit",
-    "deploy": "deploy branch=master url=http://60.204.159.43/uploadDistZip appName=admin nginxPath=C:/phpstudy_pro/WWW"
+    "deploy": "deploy branch=master url=http://tuyongtao.top/uploadDistZip appName=admin nginxPath=C:/phpstudy_pro/Extensions/Nginx1.25.2/html"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
