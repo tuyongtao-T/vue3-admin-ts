@@ -12,6 +12,7 @@ import router from '@/router'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import App from './App.vue'
 import BasePage from '@/components/BasePage.vue'
+import BaseDialog from '@/components/BaseDialog.vue'
 
 const app = createApp(App)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -20,6 +21,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(VxeTable)
 
 app.component('BasePage', BasePage)
+app.component('BaseDialog', BaseDialog)
 
 setupStore(app)
 app.use(router).mount('#app')

@@ -21,3 +21,13 @@ body,
   padding: 0;
   margin: 0;
 }
+
+.vxe-table {
+  .vxe-table--header-wrapper {
+    background-color: var(--el-color-primary-light-8) !important;
+  }
+
+  .row--hover {
+    background-color: var(--el-color-primary-light-9) !important;
+  }
+}
