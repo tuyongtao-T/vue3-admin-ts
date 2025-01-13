@@ -1,14 +1,59 @@
-<!--
- * @Author: tuyongtao1
- * @Date: 2024-02-26 17:36:05
- * @LastEditors: tuyongtao1
- * @LastEditTime: 2024-02-26 17:42:39
- * @Description: 
--->
 <template>
-  <div>用户管理</div>
+  <div class="user-manage">
+    <base-page
+      :form-config-items="formConfigItems"
+      label-width="60px"
+    ></base-page>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+const formConfigItems = reactive([
+  {
+    type: 'input',
+    key: 'school',
+    label: '学校',
+    default: '西南第一学习,'
+  },
+  {
+    type: 'input',
+    key: 'name',
+    label: '姓名',
+    placeholder: '请输入中文名称'
+  },
+  {
+    type: 'select',
+    key: 'sex',
+    label: '性别',
+    options: [
+      {
+        label: '男',
+        value: 0
+      },
+      {
+        label: '女',
+        value: 1
+      }
+    ]
+  },
+  {
+    type: 'input',
+    key: 'age',
+    label: '年龄'
+  },
+  {
+    type: 'input',
+    key: 'grade',
+    label: '年级'
+  },
+  {
+    type: 'datetime',
+    detailType: 'date',
+    key: 'startDate',
+    label: '日期',
+    placeholder: '请选择入学日期'
+  }
+])
+</script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

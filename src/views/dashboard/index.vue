@@ -2,7 +2,9 @@
   <div class="dashboard">
     <GrowCard :dashboardCardList="dashboardCardList" />
     <BaseEcharts class="chart" :options="chartOptions1" />
-    <div class="bottom-charts">
+    <div
+      class="xs:(grid grid-cols-1 grid-rows-3 gap-16) lg:(grid grid-cols-3 grid-rows-1 gap-16)"
+    >
       <BaseEcharts class="chart2" :options="chartOptions2" />
       <BaseEcharts class="chart3" :options="chartOptions3" />
       <BaseEcharts class="chart4" :options="chartOptions4" />
@@ -245,14 +247,6 @@ const chartOptions4 = ref({
 
   .chart {
     margin: $primary-padding 0;
-  }
-
-  .bottom-charts {
-    display: grid;
-    grid-template-rows: 1;
-    grid-template-columns: repeat(3, 1fr);
-    gap: $primary-padding;
-    height: 400px;
   }
 }
 </style>

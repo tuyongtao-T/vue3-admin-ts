@@ -39,6 +39,7 @@ export default defineComponent({
   height: 100%;
 
   .main-container {
+    flex-basis: min-content;
     flex-direction: column;
     background-color: rgb(228 228 231 / 0.4);
   }
