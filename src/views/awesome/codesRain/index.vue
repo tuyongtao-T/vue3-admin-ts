@@ -65,13 +65,13 @@ function init() {
   }
 
   // 添加鼠标事件监听器
-  canvasEl.addEventListener('mouseenter', () => {
-    cancelAnimationFrame(animationFrameId)
-  })
+  // canvasEl.addEventListener('mouseenter', () => {
+  //   cancelAnimationFrame(animationFrameId)
+  // })
 
-  canvasEl.addEventListener('mouseleave', () => {
-    animate()
-  })
+  // canvasEl.addEventListener('mouseleave', () => {
+  //   animate()
+  // })
 
   animate()
 }
