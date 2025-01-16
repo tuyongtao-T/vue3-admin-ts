@@ -6,7 +6,7 @@
       :width="width"
       v-model="visible"
       v-bind="$attrs"
-      :close="handleClose"
+      @close="handleClose"
       @open="handleOpen"
       :close-on-click-modal="false"
     >
@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-const props = defineProps({
+defineProps({
   title: {
     type: String,
     default: '提示'

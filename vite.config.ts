@@ -91,10 +91,10 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           }
         }
       }),
-      viteMockServe({
-        mockPath: './mock',
-        enable: VITE_USE_MOCK === '1' ? true : false
-      }),
+      // viteMockServe({
+      //   mockPath: './mock',
+      //   enable: VITE_USE_MOCK === '1' ? true : false
+      // }),
       visualizer()
     ],
     css: {
