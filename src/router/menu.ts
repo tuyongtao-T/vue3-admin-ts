@@ -11,6 +11,48 @@ export const menuRoutes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/awesome',
+    name: 'awesome',
+    component: () => import('@/views/awesome/index.vue'),
+    redirect: { name: 'honeycomb' },
+    meta: {
+      title: '奇淫巧技',
+      icon: 'Magnet'
+    },
+    children: [
+      {
+        path: '/awesome/onlineVscode',
+        name: 'onlineVscode',
+        component: () => import('@/views/awesome/onlineVscode/index.vue'),
+        meta: {
+          title: '在线vscode',
+          icon: 'Magnet'
+        },
+        children: []
+      },
+      {
+        path: '/awesome/honeycomb',
+        name: 'honeycomb',
+        component: () => import('@/views/awesome/honeycomb/index.vue'),
+        meta: {
+          title: '蜂巢网页',
+          icon: 'Magnet'
+        },
+        children: []
+      },
+      {
+        path: '/awesome/codesRain',
+        name: 'codesRain',
+        component: () => import('@/views/awesome/codesRain/index.vue'),
+        meta: {
+          title: '代码雨',
+          icon: 'Magnet'
+        },
+        children: []
+      }
+    ]
+  },
+  {
     path: '/systemManage',
     name: 'systemManage',
     component: () => import('@/views/systemManage/index.vue'),
@@ -63,48 +105,6 @@ export const menuRoutes: RouteRecordRaw[] = [
             }
           }
         ]
-      }
-    ]
-  },
-  {
-    path: '/awesome',
-    name: 'awesome',
-    component: () => import('@/views/awesome/index.vue'),
-    redirect: { name: 'honeycomb' },
-    meta: {
-      title: '奇淫巧技',
-      icon: 'Magnet'
-    },
-    children: [
-      {
-        path: '/awesome/honeycomb',
-        name: 'honeycomb',
-        component: () => import('@/views/awesome/honeycomb/index.vue'),
-        meta: {
-          title: '蜂巢网页',
-          icon: 'Magnet'
-        },
-        children: []
-      },
-      {
-        path: '/awesome/onlineVscode',
-        name: 'onlineVscode',
-        component: () => import('@/views/awesome/onlineVscode/index.vue'),
-        meta: {
-          title: '在线vscode',
-          icon: 'Magnet'
-        },
-        children: []
-      },
-      {
-        path: '/awesome/codesRain',
-        name: 'codesRain',
-        component: () => import('@/views/awesome/codesRain/index.vue'),
-        meta: {
-          title: '代码雨',
-          icon: 'Magnet'
-        },
-        children: []
       }
     ]
   }
